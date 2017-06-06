@@ -9,10 +9,12 @@ lazy val root = (project in file(".")).
     )),
     name := "dicely",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http"         % akkaHttpVersion,
-      "com.typesafe.akka" %% "akka-http-xml"     % akkaHttpVersion,
-      "com.typesafe.akka" %% "akka-stream"       % akkaVersion,
-      "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
-      "org.scalatest"     %% "scalatest"         % "3.0.1"         % Test
+      "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
+      "com.typesafe.akka" %% "akka-http-testkit"    % akkaHttpVersion % Test,
+      "org.scalatest"     %% "scalatest"            % "3.0.1"         % Test,
+      "net.debasishg"     %% "redisclient"          % "3.4",
+      "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.7"
     )
   )
