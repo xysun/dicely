@@ -40,19 +40,32 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol{
 trait DicelyRoutes extends Directives with JsonSupport{
 
   lazy val shorten =
-    path("/api/v1/shorten"){
-      post{
-        entity(as[ShortenRequest]) { request =>
-          complete{
-            Future{
-              request // todo
+
+    pathPrefix("api"){
+      pathPrefix("v1"){
+        path("shorten"){
+          post{
+            entity(as[ShortenRequest]) { request =>
+              complete{
+                Future{
+                  request.url // todo
+                }
+              }
             }
           }
         }
       }
     }
 
-  lazy val get = 
+  lazy val geturl =
+      path(Remaining){s =>
+        get{
+          complete{
+            Future{
+              s"hello $s"
+            }
+          }
+        }
 
-
+      }
 }
