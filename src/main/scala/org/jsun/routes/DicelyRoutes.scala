@@ -77,8 +77,9 @@ trait DicelyRoutes extends Directives with JsonSupport{
   lazy val geturl = // todo: make sure only one path; eg. :8080/p1/p2 should reject immediately
       path(Remaining){s =>
         get{
-            redirect("http://google.com", StatusCodes.PermanentRedirect)
+          onSuccess(Future("http://google.com")) {s =>
+            redirect(s, StatusCodes.PermanentRedirect)
+          } // todo: on failure
         }
-
       }
 }
