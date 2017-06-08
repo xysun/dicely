@@ -15,10 +15,10 @@ class UrlShortener extends Encoder{
 
   private val redisClient = new RedisClient("localhost", 6379) // todo: mock for unit test
 
-  def retrieve(shortUrl:String):String = {
+  def retrieve(shortUrl:String):Option[String] = {
 
     val id = decode(shortUrl)
-    redisClient.get(s"id:$id").get // todo: what if cannot find
+    redisClient.get(s"id:$id")
   }
 
   def shorten(req:ShortenRequest):ShortenResponse = {
