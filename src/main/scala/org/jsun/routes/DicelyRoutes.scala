@@ -9,6 +9,7 @@ import spray.json._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import com.netaporter.uri.Uri.parse
+import com.redis.RedisClient
 
 import scala.util.{Failure, Success}
 
@@ -46,8 +47,10 @@ final case class ShortenResult(
 final case class ShortenResponse(
                                 status_code:Int,
                                 status_text:String,
-                                data:ShortenResult
+                                data:Option[ShortenResult]
                                 )
+
+
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol{ // todo: move
   implicit val shortenRequestFormat  = jsonFormat1(ShortenRequest)
@@ -57,8 +60,12 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol{ // todo: mo
 
 trait DicelyRoutes extends Directives with JsonSupport{
 
-  private val engine = new UrlShortener
+  private val redisClient = new RedisClient("localhost", 6379) // todo: mock for unit test
+
+  private val engine = new UrlShortener(redisClient)
   private val version = "v1"
+
+
 
   lazy val shorten =
     pathPrefix("api"){

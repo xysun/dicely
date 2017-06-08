@@ -17,6 +17,7 @@ lazy val root = (project in file(".")).
       "net.debasishg"     %% "redisclient"          % "3.4",
       "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.7",
       "com.google.guava"  % "guava"                 % "22.0",
-      "io.lemonlabs"      %% "scala-uri"            % "0.4.16"
+      "io.lemonlabs"      %% "scala-uri"            % "0.4.16",
+      "commons-validator" % "commons-validator"     % "1.4.0"
     )
   )

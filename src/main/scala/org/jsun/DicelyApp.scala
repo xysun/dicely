@@ -8,10 +8,6 @@ import org.jsun.routes.DicelyRoutes
  * and it will be shutdown after pressing return.
  */
 object DicelyApp extends HttpApp with App with DicelyRoutes{
-  // Routes that this WebServer must handle are defined here
-  // Please note this method was named `route` in versions prior to 10.0.7
   def routes: Route = shorten ~ geturl
-
-  // This will start the server until the return key is pressed
-  startServer("localhost", 8080)
+  startServer("localhost", 8080) // todo: get port from conf or cmd line
 }
