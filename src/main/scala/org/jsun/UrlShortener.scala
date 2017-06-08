@@ -11,11 +11,13 @@ import org.jsun.routes.{ShortenRequest, ShortenResponse, ShortenResult}
 /**
   * Created by jsun on 6/8/2017 AD.
   */
-class UrlShortener {
+class UrlShortener extends Encoder{
 
   private val redisClient = new RedisClient("localhost", 6379) // todo: mock for unit test
 
   def shorten(req:ShortenRequest):ShortenResponse = {
+
+    // todo: verify it's a valid url first; abc.com; www.abc.com; http://abc.com; http://www.abc.com
 
     // urls are ascii; with 128 bits we have 2**64 = million billion chance of collission
     val bytes = Hashing.murmur3_128().hashString(req.url, Charsets.US_ASCII).asBytes()
@@ -29,18 +31,18 @@ class UrlShortener {
 
         val id = redisClient.incr("id") // todo: if id is None
 
-
+        val encoded = encode(id.get)
 
         // save to big hash table
-        redisClient.set(key, id.get.toString)
+        redisClient.set(key, encoded)
 
         ShortenResponse(
           status_code = 200,
           status_text = "OK",
           data = ShortenResult(
-            url = s"http://dice.ly/${id.get}",
+            url = s"http://dice.ly/$encoded",
             long_url = req.url,
-            hash = id.get.toString,
+            hash = encoded,
             new_hash = true
           )
         )
