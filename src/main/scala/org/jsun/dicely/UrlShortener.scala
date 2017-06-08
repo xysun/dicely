@@ -1,14 +1,13 @@
-package org.jsun
+package org.jsun.dicely
 
 import java.nio.ByteBuffer
 import java.util.UUID
 
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
+import com.netaporter.uri.Uri.parse
 import com.redis.RedisClient
 import org.apache.commons.validator.routines.UrlValidator
-import org.jsun.routes.{ShortenRequest, ShortenResponse, ShortenResult}
-import com.netaporter.uri.Uri.parse
 
 /**
   * Created by jsun on 6/8/2017 AD.
@@ -16,11 +15,9 @@ import com.netaporter.uri.Uri.parse
 class UrlShortener(redisClient:RedisClient) extends Encoder{
 
   private val urlValidator = new UrlValidator()
+  private val domain = "dice.ly" // todo: move to config
 
-  def retrieve(shortUrl:String):Option[String] = {
-
-    redisClient.get(s"id:${decode(shortUrl)}")
-  }
+  def retrieve(shortUrl:String):Option[String] = redisClient.get(s"id:${decode(shortUrl)}")
 
   def enrichUrl(url:String):Option[String] = { // todo: move to other place for unit test
     val s = parse(url)
@@ -28,16 +25,11 @@ class UrlShortener(redisClient:RedisClient) extends Encoder{
     if (urlValidator.isValid(enrichedUrl)) Some (enrichedUrl) else None
   }
 
-  def shorten(req:ShortenRequest):ShortenResponse = {
+  def shorten(req:ShortenRequest):ShortenResponse = { // todo: try catch
 
     // verify if it's a valid url first
     val enrichedUrlOption = enrichUrl(req.url)
-    if (enrichedUrlOption.isEmpty)
-      return ShortenResponse(
-        status_code = 500,
-        status_text = "INVALID_ARG_URL",
-        data = None
-      )
+    if (enrichedUrlOption.isEmpty) return ShortenResponseCreator.INVALID_URL
 
     val enrichedUrl = enrichedUrlOption.get
 
@@ -63,30 +55,12 @@ class UrlShortener(redisClient:RedisClient) extends Encoder{
         // save to (counter, long_url) table
         redisClient.set(s"id:$id", enrichedUrl)
 
-        ShortenResponse(
-          status_code = 200,
-          status_text = "OK",
-          data = Some(ShortenResult(
-            url = s"http://dice.ly/$encoded",
-            long_url = enrichedUrl,
-            hash = encoded,
-            new_hash = true
-          ))
-        )
+        ShortenResponseCreator.createResponse(domain, encoded, enrichedUrl, true)
 
       }
-      case Some(s:String) => {
-        ShortenResponse(
-          status_code = 200,
-          status_text = "OK",
-          data = Some(ShortenResult(
-            url = s"http://dice.ly/$s",
-            long_url = enrichedUrl,
-            hash = s,
-            new_hash = false
-          ))
-        )
-      }
+
+      case Some(s:String) => ShortenResponseCreator.createResponse(domain, s, enrichedUrl, false)
+
     }
 
   }

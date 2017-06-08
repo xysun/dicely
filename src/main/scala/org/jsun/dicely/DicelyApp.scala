@@ -1,7 +1,6 @@
-package org.jsun
+package org.jsun.dicely
 
 import akka.http.scaladsl.server.{HttpApp, Route}
-import org.jsun.routes.DicelyRoutes
 
 /**
  * Server will be started calling `WebServerHttpApp.startServer("localhost", 8080)`

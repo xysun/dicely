@@ -1,16 +1,14 @@
-package org.jsun.routes
+package org.jsun.dicely
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives
-import org.jsun.UrlShortener
+import com.netaporter.uri.Uri.parse
+import com.redis.RedisClient
 import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import com.netaporter.uri.Uri.parse
-import com.redis.RedisClient
-
 import scala.util.{Failure, Success}
 
 /**

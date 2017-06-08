@@ -1,4 +1,4 @@
-package org.jsun
+package org.jsun.dicely
 
 /**
   * Created by jsun on 6/8/2017 AD.
