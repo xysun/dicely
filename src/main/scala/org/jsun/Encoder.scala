@@ -9,6 +9,7 @@ trait Encoder { // todo: rename
   private val BASE     = ALPHABET.length
 
   // todo: how to prevent ppl enumerate all integers
+  // todo: unit test
 
   def decode(str:String):Long = {
     str.foldLeft(0L)((num, c) => num * BASE + ALPHABET.indexOf(c))
@@ -17,7 +18,7 @@ trait Encoder { // todo: rename
   def encode(i:Long):String = {
     val str: StringBuilder = new StringBuilder
 
-    var num = i // todo: scala-ish
+    var num = i // todo: more scala
     while(num > 0){
       str.insert(0, ALPHABET.charAt((num % BASE).toInt))
       num /= BASE

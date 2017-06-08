@@ -15,6 +15,12 @@ class UrlShortener extends Encoder{
 
   private val redisClient = new RedisClient("localhost", 6379) // todo: mock for unit test
 
+  def retrieve(shortUrl:String):String = {
+
+    val id = decode(shortUrl)
+    redisClient.get(s"id:$id").get // todo: what if cannot find
+  }
+
   def shorten(req:ShortenRequest):ShortenResponse = {
 
     // todo: verify it's a valid url first; abc.com; www.abc.com; http://abc.com; http://www.abc.com
@@ -29,12 +35,15 @@ class UrlShortener extends Encoder{
 
       case None => {
 
-        val id = redisClient.incr("id") // todo: if id is None
+        val id = redisClient.incr("id").get // todo: if id is None
 
-        val encoded = encode(id.get)
+        val encoded = encode(id)
 
-        // save to big hash table
+        // save to (hash(long_url), short_url) table
         redisClient.set(key, encoded)
+
+        // save to (counter, long_url) table
+        redisClient.set(s"id:$id", req.url)
 
         ShortenResponse(
           status_code = 200,

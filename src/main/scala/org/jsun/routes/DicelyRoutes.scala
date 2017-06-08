@@ -9,6 +9,8 @@ import spray.json._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+import com.netaporter.uri.Uri.parse
+
 /**
   * Created by jsun on 6/6/2017 AD.
   *
@@ -77,7 +79,13 @@ trait DicelyRoutes extends Directives with JsonSupport{
   lazy val geturl = // todo: make sure only one path; eg. :8080/p1/p2 should reject immediately
       path(Remaining){s =>
         get{
-          onSuccess(Future("http://google.com")) {s =>
+          onSuccess(Future{
+
+            val url = parse(s)
+            require(url.pathParts.size == 1)
+            engine.retrieve(url.path.tail) // remove '/'
+
+          }) {s =>
             redirect(s, StatusCodes.PermanentRedirect)
           } // todo: on failure
         }

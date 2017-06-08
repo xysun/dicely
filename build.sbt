@@ -16,6 +16,7 @@ lazy val root = (project in file(".")).
       "org.scalatest"     %% "scalatest"            % "3.0.1"         % Test,
       "net.debasishg"     %% "redisclient"          % "3.4",
       "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.7",
-      "com.google.guava"  % "guava"                 % "22.0"
+      "com.google.guava"  % "guava"                 % "22.0",
+      "io.lemonlabs"      %% "scala-uri"            % "0.4.16"
     )
   )
