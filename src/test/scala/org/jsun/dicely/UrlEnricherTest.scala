@@ -23,6 +23,11 @@ class UrlEnricherTest extends FunSuite with UrlEnricher{
     assert(enrichUrl(u).get == s"http://$u")
   }
 
+  test("white space shouldn't matter"){
+    val u = "   google.com   "
+    assert(enrichUrl(u).get == s"http://google.com")
+  }
+
   test("invalid case"){
     val u = "abc"
     assert(enrichUrl(u).isEmpty)

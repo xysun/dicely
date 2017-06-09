@@ -19,7 +19,6 @@ lazy val root = (project in file(".")).
       "com.google.guava"  % "guava"                        % "22.0",
       "io.lemonlabs"      %% "scala-uri"                   % "0.4.16",
       "commons-validator" % "commons-validator"            % "1.4.0",
-      "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
       "com.iheart"        %% "ficus"                       % "1.4.1"
     )
   )

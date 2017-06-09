@@ -6,7 +6,9 @@ import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import com.redis.RedisClient
 import com.typesafe.config.ConfigFactory
+import org.jsun.dicely.db.RedisClientImpl
 import org.jsun.dicely.model.{JsonSupport, ShortenRequest, ShortenResponse, ShortenResult}
+import org.jsun.dicely.util.UrlHasherImpl
 import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -21,23 +23,21 @@ import scala.util.{Failure, Success}
 
 
 
-trait DicelyRoutes extends Directives with JsonSupport{
+trait DicelyRoutes extends Directives with JsonSupport
+with UrlShortener
+with UrlHasherImpl
+with RedisClientImpl{
 
-  private val conf = ConfigFactory.load()
-
-  private val redisClient = new RedisClient(conf.getString("redis.host"), conf.getInt("redis.port")) // todo: mock for unit test
-
-  private val engine = new UrlShortener(redisClient)
   private val version = "v1"
 
-  lazy val shorten =
+  lazy val shortenRoute =
     pathPrefix("api"){
       pathPrefix(version){
         path("shorten"){
           post{
             entity(as[ShortenRequest]) { request =>
               complete{
-                Future{engine.shorten(request)}
+                Future{shorten(request.url)}
               }
             }
           }
@@ -48,7 +48,7 @@ trait DicelyRoutes extends Directives with JsonSupport{
   lazy val geturl =
       path(Remaining){s =>
         get{
-          onComplete(Future(engine.retrieve(parse(s).pathRaw.tail))){
+          onComplete(Future(retrieve(parse(s).pathRaw.tail))){
             case Success(v)  => v match {
               case None          => complete(HttpResponse(StatusCodes.NotFound))
               case Some(longUrl) => redirect(longUrl, StatusCodes.MovedPermanently)

@@ -9,7 +9,7 @@ import com.typesafe.config.ConfigFactory
  */
 object DicelyApp extends HttpApp with App with DicelyRoutes{
 
-  def routes: Route = shorten ~ geturl
+  def routes: Route = shortenRoute ~ geturl
 
   val port = ConfigFactory.load().getInt("port")
 

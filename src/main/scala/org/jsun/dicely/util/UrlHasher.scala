@@ -9,7 +9,7 @@ import com.google.common.hash.Hashing
 /**
   * Created by jsun on 6/8/2017 AD.
   */
-trait UrlHasher{
+trait UrlHasher{ // easier to mock for unit test
   def hashUrl(url:String):String
 }
 

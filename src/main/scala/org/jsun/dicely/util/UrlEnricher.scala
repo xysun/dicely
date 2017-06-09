@@ -11,8 +11,9 @@ trait UrlEnricher {
   private val urlValidator = new UrlValidator()
 
   def enrichUrl(url:String):Option[String] = {
-    val s = parse(url)
-    val enrichedUrl = if (s.protocol.isEmpty) s"http://$url" else url
+    val strippedUrl = url.replace(" ","")
+    val s = parse(strippedUrl)
+    val enrichedUrl = if (s.protocol.isEmpty) s"http://$strippedUrl" else strippedUrl
     if (urlValidator.isValid(enrichedUrl)) Some (enrichedUrl) else None
   }
 
