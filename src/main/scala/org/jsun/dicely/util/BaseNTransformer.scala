@@ -11,7 +11,6 @@ trait BaseNTransformer {
   private val BASE     = ALPHABET.length
 
   // todo: how to prevent ppl enumerate all integers
-  // todo: unit test
 
   def decode(str:String):Long = {
     str.foldLeft(0L)((num, c) => num * BASE + ALPHABET.indexOf(c))

@@ -5,7 +5,7 @@ import org.jsun.dicely.model.{ShortenResponse, ShortenResult}
 /**
   * Created by jsun on 6/8/2017 AD.
   */
-object ShortenResponseCreator {
+object ResponseCreator {
 
   val INVALID_URL = ShortenResponse(
     status_code = 500,
@@ -13,7 +13,7 @@ object ShortenResponseCreator {
     data = None
   )
 
-  def createResponse(domain:String, hash:String, longUrl:String, isNewHash:Boolean) =
+  def create(domain:String, hash:String, longUrl:String, isNewHash:Boolean) =
     ShortenResponse(
       status_code = 200,
       status_text = "OK",
