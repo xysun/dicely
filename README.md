@@ -6,6 +6,7 @@
 numbers:
 * long gives you 2**64 urls, max slug length is 10
 
-test case:
-* {"url":"github.com/lemonlabsuk/scala-uri"} should pass
-* {"url":"github.com/lemonlabsuk/scala-uri"} should give same result as {"url":"http://github.com/lemonlabsuk/scala-uri"}
+TODO:
+* use gatling to loadtest
+* set up nginx -> 2 servers -> redis cluster
+* separate by readonly and writeonly

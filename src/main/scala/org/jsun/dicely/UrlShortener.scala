@@ -12,31 +12,31 @@ import org.jsun.dicely.db.DBClient
 import org.jsun.dicely.model.ShortenResponse
 import org.jsun.dicely.util._
 
-trait UrlShortener extends BaseNTransformer{
+trait UrlShortener extends BaseNTransformer {
 
-  this:DBClient =>
+  this: DBClient =>
 
   private val conf = ConfigFactory.load()
 
   private val urlValidator = new UrlValidator()
 
-  def hashUrl(url:String):String = {
+  def hashUrl(url: String): String = {
     // urls are ascii; with 128 bits we have 2**64 = million billion chance of collission
     val bytes = Hashing.murmur3_128().hashString(url, Charsets.US_ASCII).asBytes()
     val byteBuffer = ByteBuffer.wrap(bytes)
     new UUID(byteBuffer.getLong, byteBuffer.getLong).toString
   }
 
-  def enrichUrl(url:String):Option[String] = {
-    val strippedUrl = url.replace(" ","")
+  def enrichUrl(url: String): Option[String] = {
+    val strippedUrl = url.replace(" ", "")
     val s = parse(strippedUrl)
     val enrichedUrl = if (s.protocol.isEmpty) s"http://$strippedUrl" else strippedUrl
-    if (urlValidator.isValid(enrichedUrl)) Some (enrichedUrl) else None
+    if (urlValidator.isValid(enrichedUrl)) Some(enrichedUrl) else None
   }
 
-  def retrieve(shortUrl:String):Option[String] = dbGet(s"id:${decode(shortUrl)}")
+  def retrieve(shortUrl: String): Option[String] = dbGet(s"id:${decode(shortUrl)}")
 
-  def shorten(longUrl:String):ShortenResponse = { // todo: try catch
+  def shorten(longUrl: String): ShortenResponse = { // todo: try catch
 
     val base = s"${conf.getString("domain")}:${conf.getInt("port")}"
 
@@ -67,7 +67,7 @@ trait UrlShortener extends BaseNTransformer{
 
       }
 
-      case Some(s:String) => ResponseCreator.create(base, s, enrichedUrl, false)
+      case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
 
     }
 
