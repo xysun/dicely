@@ -1,21 +1,14 @@
 package org.jsun.dicely
 
-import java.nio.ByteBuffer
-import java.util.UUID
-
-import com.google.common.base.Charsets
-import com.google.common.hash.Hashing
-import com.netaporter.uri.Uri.parse
 import com.redis.RedisClient
 import com.typesafe.config.ConfigFactory
-import org.apache.commons.validator.routines.UrlValidator
 import org.jsun.dicely.model.{ShortenRequest, ShortenResponse}
-import org.jsun.dicely.util.{BaseNTransformer, ShortenResponseCreator, UrlEnricher}
+import org.jsun.dicely.util.{BaseNTransformer, ShortenResponseCreator, UrlEnricher, UrlHasher}
 
-/**
-  * Created by jsun on 6/8/2017 AD.
-  */
+
 class UrlShortener(redisClient:RedisClient) extends BaseNTransformer with UrlEnricher{
+
+  this:UrlHasher =>
 
   private val conf = ConfigFactory.load()
 
@@ -32,18 +25,14 @@ class UrlShortener(redisClient:RedisClient) extends BaseNTransformer with UrlEnr
     val enrichedUrl = enrichedUrlOption.get
 
     // todo: unit test on invalid url
-
-    // urls are ascii; with 128 bits we have 2**64 = million billion chance of collission
-    val bytes = Hashing.murmur3_128().hashString(enrichedUrl, Charsets.US_ASCII).asBytes()
-    val byteBuffer = ByteBuffer.wrap(bytes)
     // todo: unit test: if stop and start, should generate same
-    val key = s"hash:${new UUID(byteBuffer.getLong, byteBuffer.getLong)}"
+    val key = s"hash:${hashUrl(enrichedUrl)}"
 
     redisClient.get(key) match {
 
       case None => {
 
-        val id = redisClient.incr("id").get // todo: if id is None
+        val id = redisClient.incr("id").get // todo: if id is None, can be handled with try catch
 
         val encoded = encode(id)
 
