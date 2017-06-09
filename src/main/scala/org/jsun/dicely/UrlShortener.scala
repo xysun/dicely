@@ -7,25 +7,23 @@ import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import com.netaporter.uri.Uri.parse
 import com.redis.RedisClient
+import com.typesafe.config.ConfigFactory
 import org.apache.commons.validator.routines.UrlValidator
+import org.jsun.dicely.model.{ShortenRequest, ShortenResponse}
+import org.jsun.dicely.util.{BaseNTransformer, ShortenResponseCreator, UrlEnricher}
 
 /**
   * Created by jsun on 6/8/2017 AD.
   */
-class UrlShortener(redisClient:RedisClient) extends Encoder{
+class UrlShortener(redisClient:RedisClient) extends BaseNTransformer with UrlEnricher{
 
-  private val urlValidator = new UrlValidator()
-  private val domain = "dice.ly" // todo: move to config
+  private val conf = ConfigFactory.load()
 
   def retrieve(shortUrl:String):Option[String] = redisClient.get(s"id:${decode(shortUrl)}")
 
-  def enrichUrl(url:String):Option[String] = { // todo: move to other place for unit test
-    val s = parse(url)
-    val enrichedUrl = if (s.protocol.isEmpty) s"http://$url" else url
-    if (urlValidator.isValid(enrichedUrl)) Some (enrichedUrl) else None
-  }
-
   def shorten(req:ShortenRequest):ShortenResponse = { // todo: try catch
+
+    val base = s"${conf.getString("domain")}:${conf.getInt("port")}"
 
     // verify if it's a valid url first
     val enrichedUrlOption = enrichUrl(req.url)
@@ -55,11 +53,11 @@ class UrlShortener(redisClient:RedisClient) extends Encoder{
         // save to (counter, long_url) table
         redisClient.set(s"id:$id", enrichedUrl)
 
-        ShortenResponseCreator.createResponse(domain, encoded, enrichedUrl, true)
+        ShortenResponseCreator.createResponse(base, encoded, enrichedUrl, true)
 
       }
 
-      case Some(s:String) => ShortenResponseCreator.createResponse(domain, s, enrichedUrl, false)
+      case Some(s:String) => ShortenResponseCreator.createResponse(base, s, enrichedUrl, false)
 
     }
 

@@ -5,65 +5,30 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import com.redis.RedisClient
+import com.typesafe.config.ConfigFactory
+import org.jsun.dicely.model.{JsonSupport, ShortenRequest, ShortenResponse, ShortenResult}
 import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-/**
-  * Created by jsun on 6/6/2017 AD.
-  *
-  * routes:
-  *
-  * POST /api/v1/shorten
-  * request: {"url":"xxx"}
-  * response:
-  * {
-      "status_code": 200,
-      "data": {
-        "url": "http://bit.ly/2scqcO2",
-        "long_url": "https://mvnrepository.com/artifact/org.json4s/json4s-jackson_2.11/3.5.2",
-        "hash": "2scsNYh",
-        "is_new_hash": 1
-      },
-      "status_txt": "OK"
-    }
-  *
-  * GET /abcde -> 304 redirect
-  *
-  *
-  */
-
-final case class ShortenRequest(url:String)
-final case class ShortenResult(
-                              url:String,
-                              long_url:String,
-                              hash:String,
-                              new_hash:Boolean
-                              )
-final case class ShortenResponse(
-                                status_code:Int,
-                                status_text:String,
-                                data:Option[ShortenResult]
-                                )
 
 
 
-trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol{ // todo: move
-  implicit val shortenRequestFormat  = jsonFormat1(ShortenRequest)
-  implicit val shortenResultFormat   = jsonFormat4(ShortenResult)
-  implicit val shortenResponseFormat = jsonFormat3(ShortenResponse)
-}
+
+
+
+
 
 trait DicelyRoutes extends Directives with JsonSupport{
 
-  private val redisClient = new RedisClient("localhost", 6379) // todo: mock for unit test
+  private val conf = ConfigFactory.load()
+
+  private val redisClient = new RedisClient(conf.getString("redis.host"), conf.getInt("redis.port")) // todo: mock for unit test
 
   private val engine = new UrlShortener(redisClient)
   private val version = "v1"
-
-
 
   lazy val shorten =
     pathPrefix("api"){

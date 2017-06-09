@@ -9,15 +9,17 @@ lazy val root = (project in file(".")).
     )),
     name := "dicely",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion,
-      "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
-      "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
-      "com.typesafe.akka" %% "akka-http-testkit"    % akkaHttpVersion % Test,
-      "org.scalatest"     %% "scalatest"            % "3.0.1"         % Test,
-      "net.debasishg"     %% "redisclient"          % "3.4",
-      "com.typesafe.akka" %% "akka-http-spray-json" % "10.0.7",
-      "com.google.guava"  % "guava"                 % "22.0",
-      "io.lemonlabs"      %% "scala-uri"            % "0.4.16",
-      "commons-validator" % "commons-validator"     % "1.4.0"
+      "com.typesafe.akka" %% "akka-http"                   % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http-xml"               % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-stream"                 % akkaVersion,
+      "com.typesafe.akka" %% "akka-http-testkit"           % akkaHttpVersion % Test,
+      "org.scalatest"     %% "scalatest"                   % "3.0.1"         % Test,
+      "net.debasishg"     %% "redisclient"                 % "3.4",
+      "com.typesafe.akka" %% "akka-http-spray-json"        % "10.0.7",
+      "com.google.guava"  % "guava"                        % "22.0",
+      "io.lemonlabs"      %% "scala-uri"                   % "0.4.16",
+      "commons-validator" % "commons-validator"            % "1.4.0",
+      "org.scalamock"     %% "scalamock-scalatest-support" % "3.5.0" % Test,
+      "com.iheart"        %% "ficus"                       % "1.4.1"
     )
   )

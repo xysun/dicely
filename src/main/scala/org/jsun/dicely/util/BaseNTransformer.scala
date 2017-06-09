@@ -1,9 +1,11 @@
-package org.jsun.dicely
+package org.jsun.dicely.util
 
 /**
   * Created by jsun on 6/8/2017 AD.
   */
-trait Encoder { // todo: rename
+trait BaseNTransformer {
+
+  // todo: scramble alphabet, some kind of randomization for prefix (id mod?)
 
   private val ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
   private val BASE     = ALPHABET.length
