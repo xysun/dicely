@@ -1,25 +1,76 @@
-* smartly expand to >=6 length of string; already can
-* how to avoid someone enumerate
-* what if we passed 64bit? -- auto create a new "id", then add; but let's not worry for now
-* calculate redis size
+dicely is a URL shortening service. 
 
-numbers:
-* long gives you 2**64 urls, max slug length is 10
+### Try it out
 
-TODO:
-* use gatling to loadtest
-* set up nginx -> 2 servers -> redis cluster on aws; setup redis persistence
-* write doc
-* separate by readonly and writeonly
+An example Dicely service is deployed on a digital ocean instance. 
 
----
-### Capacity
-- how many urls can store? How many redis nodes we need for max capacity?
-- req/s on servers
+```
+> curl -H "Content-Type: application/json" -X POST -d '{"url":"https://github.com"}' http://46.101.75.1/api/v1/shorten
+> {"status_code":200,"status_text":"OK","data":{"short_url":"http://46.101.75.1/mb3","long_url":"https://github.com","hash":"mb3","new_hash":true}}
+> curl http://46.101.75.1/mb3
+> This and all future requests should be directed to <a href="https://github.com">this URI</a>
+```
 
-### System design
-- redis cluster: sharding? persistence; replication
+### Run locally
 
-### Further improvements
-- spam filter
+You will need:
+
+- java 1.8
+- a local running redis instance. You can quickly get one running following instruction [here](https://redis.io/topics/quickstart)
+
+```
+> git clone git@github.com:xysun/dicely.git
+> cd dicely
+> sbt compile
+> sbt test // unit tests
+> sbt run
+```
+
+### Design
+
+Here is the sample service architecture deployed: 
+
+![service architecture](service architecture.png)
+
+It's easy to scale horizontally for both service layer and database layer (redis)
+
+Here is the algorithm design: 
+
+![algorithm](algorithm design.png)
+
+
+### Features
+
+- Can shorten up to 4.3bn urls (roughly same as the [internet size](http://www.worldwidewebsize.com/)). It's also very easy to extend to bigger size. 
+- Same short url returned for multiple requests of same long url. 
+- Protection against enumeration of all database entries with random salt prefix. 
+- Not tied to redis, easy to swap to a different database. 
+- Fast. [TODO] gatling result here.
+
+
+### Furthur improvements
+
+- An URL shortening service usually has high read-to-write ratio. We can separate both at application layer and database layer (redis support readonly and writeonly nodes in a cluster)
+- URL shortening service is usually the target for heavy spammers. We can implement some kind of spam filtering to protect the service. 
+
+### Deploy as standalone jar
+
+First update settings in `prod.conf`, specifically: 
+
+- `domain`: the domain for returned short url. For example, if you'd like to have `http://dice.ly/xkcd`, then set `domain = "dice.ly"`
+- `port`: port of application 
+- `get-port`: port to serve incoming GET requests. It may be different from application port above as very often there's a load balancer in front of application servers.
+- `redis`: 
+	
+	- `mode`: support both "standalone" and "cluster"
+	- `host`, `port`: host and port for redis. For cluster mode, it's enough to specify one master node, the application will discover other nodes in the cluster automatically.
+	
+Then:
+
+```
+> sbt assembly // jar in target/scala-2.11
+> java -Dlogback.configurationFile=logback_prod.xml -Dconfig.resource=prod.conf -jar target/scala-2.11/dicely.jar <port>
+> // logs saved in /var/log/dicely
+```
+
 
