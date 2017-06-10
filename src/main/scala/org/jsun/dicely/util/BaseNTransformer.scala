@@ -11,6 +11,9 @@ trait BaseNTransformer {
   private val BASE = ALPHABET.length
 
   // todo: how to prevent ppl enumerate all integers
+  /* it might be useful to add a two character checksum to the url. That would prevent direct iteration of all the urls in your system. Something simple like f(checksum(id) % (62^2)) + f(id) = url_id”
+
+   */
 
   def decode(str: String): Long = {
     str.foldLeft(0L)((num, c) => num * BASE + ALPHABET.indexOf(c))

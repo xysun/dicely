@@ -19,7 +19,7 @@ trait DBClientMock extends DBClient {
 
   def dbIncr(key: String) = {
     counter += 1
-    Some(counter)
+    counter
   }
 
   def dbSet(key: String, value: String) = {

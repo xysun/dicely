@@ -53,7 +53,7 @@ trait UrlShortener extends BaseNTransformer {
 
       case None => {
 
-        val id = dbIncr("id").get // todo: if id is None, can be handled with try catch
+        val id = dbIncr("id")
 
         val encoded = encode(id)
 

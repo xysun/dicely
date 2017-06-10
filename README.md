@@ -8,5 +8,19 @@ numbers:
 
 TODO:
 * use gatling to loadtest
-* set up nginx -> 2 servers -> redis cluster
+* set up nginx -> 2 servers -> redis cluster on aws; setup redis persistence
+* write doc
+* setup logging
 * separate by readonly and writeonly
+
+---
+### Capacity
+- how many urls can store? How many redis nodes we need for max capacity?
+- req/s on servers
+
+### System design
+- redis cluster: sharding? persistence; replication
+
+### Further improvements
+- spam filter
+
