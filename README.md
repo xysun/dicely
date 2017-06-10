@@ -18,6 +18,8 @@ You will need:
 - java 1.8
 - a local running redis instance. You can quickly get one running following instruction [here](https://redis.io/topics/quickstart)
 
+Then: 
+
 ```
 > git clone git@github.com:xysun/dicely.git
 > cd dicely
@@ -28,11 +30,11 @@ You will need:
 
 ### Design
 
-Here is the sample service architecture deployed: 
+Here is the architecture of sample service deployed on that digital ocean instance: 
 
 ![service architecture](images/service_architecture.png)
 
-It's easy to scale horizontally for both service layer and database layer (redis)
+It's easy to scale horizontally for both service layer and database layer. 
 
 Here is the algorithm design: 
 
@@ -70,7 +72,8 @@ Then:
 ```
 > sbt assembly // jar in target/scala-2.11
 > java -Dlogback.configurationFile=logback_prod.xml -Dconfig.resource=prod.conf -jar target/scala-2.11/dicely.jar <port>
-> // logs saved in /var/log/dicely
 ```
+
+Logs are saved in `/var/log/dicely`, make sure you have that dir available with write permission. 
 
 
