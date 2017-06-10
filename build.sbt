@@ -8,7 +8,7 @@ lazy val akkaVersion    = "2.5.2"
 lazy val assemblySettings =
   Seq(
     test in assembly := {},
-    assemblyJarName in assembly := f"dicely_${version.value}.jar"
+    assemblyJarName in assembly := f"dicely.jar"
   )
 
 lazy val releaseSettings =
