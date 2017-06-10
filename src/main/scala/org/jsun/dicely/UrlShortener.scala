@@ -16,6 +16,8 @@ trait UrlShortener extends BaseNTransformer {
 
   this: DBClient =>
 
+  private val conf = ConfigFactory.load()
+
   private val urlValidator = new UrlValidator()
 
   def hashUrl(url: String): String = {
@@ -36,6 +38,8 @@ trait UrlShortener extends BaseNTransformer {
   def retrieve(shortUrl: String): Option[String] = dbGet(s"id:${decode(shortUrl)}")
 
   def shorten(longUrl: String): ShortenResponse = {
+
+    val base = s"${conf.getString("domain")}:${conf.getInt("port")}"
 
     // verify if it's a valid url first
     val enrichedUrlOption = enrichUrl(longUrl)
@@ -59,11 +63,11 @@ trait UrlShortener extends BaseNTransformer {
         // save to (counter, long_url) table
         dbSet(s"id:$id", enrichedUrl)
 
-        ResponseCreator.create(encoded, enrichedUrl, true)
+        ResponseCreator.create(base, encoded, enrichedUrl, true)
 
       }
 
-      case Some(s: String) => ResponseCreator.create(s, enrichedUrl, false)
+      case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
 
     }
 

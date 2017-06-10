@@ -19,11 +19,12 @@ object ResponseCreator {
     data = None
   )
 
-  def create(hash: String, longUrl: String, isNewHash: Boolean) =
+  def create(domain: String, hash: String, longUrl: String, isNewHash: Boolean) =
     ShortenResponse(
       status_code = 200,
       status_text = "OK",
       data = Some(ShortenResult(
+        url = s"http://$domain/$hash",
         long_url = longUrl,
         hash = hash,
         new_hash = isNewHash
