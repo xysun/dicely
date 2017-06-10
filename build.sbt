@@ -1,5 +1,39 @@
+import sbt.Keys._
+import ReleaseTransformations._
+import ReleasePlugin.autoImport._
+
 lazy val akkaHttpVersion = "10.0.7"
 lazy val akkaVersion    = "2.5.2"
+
+lazy val assemblySettings =
+  Seq(
+    version := { "\"(.*)\"".r.findAllMatchIn(scala.io.Source.fromFile(releaseVersionFile.value).mkString).toSeq.head.group(1) },
+    test in assembly := {},
+    assemblyJarName in assembly := f"dicely_${version.value}.jar",
+    assemblyMergeStrategy in assembly := {
+      case PathList("application.conf") => MergeStrategy.discard
+      case PathList("logback.xml") => MergeStrategy.first
+      case x =>
+        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        oldStrategy(x)
+    }
+  )
+
+lazy val releaseSettings =
+  Seq(
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    releaseStepTask(assembly),  //create assembly
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  )
+)
 
 lazy val root = (project in file(".")).
   settings(
@@ -24,3 +58,5 @@ lazy val root = (project in file(".")).
       "ch.qos.logback"             %  "logback-classic"             % "1.1.7"
     )
   )
+  .settings(assemblySettings: _*)
+  .settings(releaseSettings: _*)
