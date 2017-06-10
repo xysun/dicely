@@ -8,6 +8,6 @@ import spray.json.DefaultJsonProtocol
  */
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val shortenRequestFormat = jsonFormat1(ShortenRequest)
-  implicit val shortenResultFormat = jsonFormat4(ShortenResult)
+  implicit val shortenResultFormat = jsonFormat3(ShortenResult)
   implicit val shortenResponseFormat = jsonFormat3(ShortenResponse)
 }
