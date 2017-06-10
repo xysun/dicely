@@ -1,17 +1,17 @@
 package org.jsun.dicely.routes
 
-import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{ HttpResponse, StatusCodes }
 import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import com.typesafe.scalalogging.LazyLogging
 import org.jsun.dicely.UrlShortener
-import org.jsun.dicely.db.{DBClient, RedisClientImpl}
-import org.jsun.dicely.model.{JsonSupport, ShortenRequest}
+import org.jsun.dicely.db.{ DBClient, RedisClientImpl }
+import org.jsun.dicely.model.{ JsonSupport, ShortenRequest }
 import org.jsun.dicely.util.ResponseCreator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 trait DicelyRoutes extends Directives with JsonSupport with UrlShortener with LazyLogging {
   this: DBClient =>
@@ -25,7 +25,7 @@ trait DicelyRoutes extends Directives with JsonSupport with UrlShortener with La
           post {
             entity(as[ShortenRequest]) { request =>
               onComplete(Future(shorten(request.url))) {
-                case Success(v)  => complete(v)
+                case Success(v) => complete(v)
                 case Failure(ex) => {
                   logger.error(s"internal server error for shorten POST $request", ex)
                   complete(ResponseCreator.INTERNAL_SERVER_ERROR)

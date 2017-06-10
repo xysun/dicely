@@ -30,7 +30,7 @@ trait BaseNTransformer {
     str.substring(2).foldLeft(0L)((num, c) => num * BASE + ALPHABET.indexOf(c))
   }
 
-  def encode(i:Long):String = {
+  def encode(i: Long): String = {
 
     // with two character checksum to prevent direct iteration of all urls
     // f(checksum(id) % (62^2)) + f(id) = url_id

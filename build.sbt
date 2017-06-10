@@ -7,16 +7,8 @@ lazy val akkaVersion    = "2.5.2"
 
 lazy val assemblySettings =
   Seq(
-    version := { "\"(.*)\"".r.findAllMatchIn(scala.io.Source.fromFile(releaseVersionFile.value).mkString).toSeq.head.group(1) },
     test in assembly := {},
-    assemblyJarName in assembly := f"dicely_${version.value}.jar",
-    assemblyMergeStrategy in assembly := {
-      case PathList("application.conf") => MergeStrategy.discard
-      case PathList("logback.xml") => MergeStrategy.first
-      case x =>
-        val oldStrategy = (assemblyMergeStrategy in assembly).value
-        oldStrategy(x)
-    }
+    assemblyJarName in assembly := f"dicely_${version.value}.jar"
   )
 
 lazy val releaseSettings =

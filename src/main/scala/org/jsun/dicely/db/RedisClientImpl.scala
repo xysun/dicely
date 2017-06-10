@@ -1,7 +1,7 @@
 package org.jsun.dicely.db
 
 import com.typesafe.config.ConfigFactory
-import redis.clients.jedis.{HostAndPort, Jedis, JedisCluster}
+import redis.clients.jedis.{ HostAndPort, Jedis, JedisCluster }
 
 /**
  * Created by jsun on 6/9/2017 AD.
