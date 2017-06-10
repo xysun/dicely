@@ -30,13 +30,13 @@ You will need:
 
 Here is the sample service architecture deployed: 
 
-![service architecture](service architecture.png)
+![service architecture](images/service architecture.png)
 
 It's easy to scale horizontally for both service layer and database layer (redis)
 
 Here is the algorithm design: 
 
-![algorithm](algorithm design.png)
+![algorithm](images/algorithm design.png)
 
 
 ### Features
