@@ -48,7 +48,7 @@ trait DicelyRoutes extends Directives with JsonSupport with UrlShortener with La
           case Failure(ex) => {
             logger.error(s"internal server error for GET $s", ex)
             complete(HttpResponse(StatusCodes.NotFound))
-          } 
+          }
         }
       }
     }

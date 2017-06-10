@@ -10,7 +10,8 @@
     </appender>
 
     <root level="error">
-        <appender-ref ref="STDOUT" />
+        <!-- no logger for tests-->
+        <!--<appender-ref ref="STDOUT" />-->
     </root>
 
 </configuration>
