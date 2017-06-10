@@ -24,7 +24,7 @@ object ResponseCreator {
       status_code = 200,
       status_text = "OK",
       data = Some(ShortenResult(
-        url = s"http://$domain/$hash",
+        short_url = s"http://$domain/$hash",
         long_url = longUrl,
         hash = hash,
         new_hash = isNewHash

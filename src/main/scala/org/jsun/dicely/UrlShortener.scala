@@ -39,7 +39,10 @@ trait UrlShortener extends BaseNTransformer {
 
   def shorten(longUrl: String): ShortenResponse = {
 
-    val base = s"${conf.getString("domain")}:${conf.getInt("port")}"
+    val base = {
+      if (conf.getInt("get-port") == 80) s"${conf.getString("domain")}"
+      else s"${conf.getString("domain")}:${conf.getInt("get-port")}"
+    }
 
     // verify if it's a valid url first
     val enrichedUrlOption = enrichUrl(longUrl)
