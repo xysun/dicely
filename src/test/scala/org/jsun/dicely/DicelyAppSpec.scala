@@ -83,8 +83,9 @@ class DicelyAppSpec extends WordSpec with Matchers with ScalatestRouteTest
     }
 
     "get a hashed short url should return redirect" in {
+      val longUrl = "http://test1.com"
       var hash = ""
-      post("http://test1.com") ~> routes ~> check {
+      post(longUrl) ~> routes ~> check {
         status shouldBe StatusCodes.OK
         responseAs[ShortenResponse].status_code shouldBe 200
         responseAs[ShortenResponse].data.get.new_hash shouldBe true
@@ -93,7 +94,7 @@ class DicelyAppSpec extends WordSpec with Matchers with ScalatestRouteTest
 
       Get(s"/$hash") ~> routes ~> check {
         status shouldBe StatusCodes.MovedPermanently
-        // todo: test redirect right url
+        assert(responseAs[String] contains longUrl)
       }
     }
 

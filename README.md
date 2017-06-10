@@ -10,7 +10,6 @@ TODO:
 * use gatling to loadtest
 * set up nginx -> 2 servers -> redis cluster on aws; setup redis persistence
 * write doc
-* setup logging
 * separate by readonly and writeonly
 
 ---
