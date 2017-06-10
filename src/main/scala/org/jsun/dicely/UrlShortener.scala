@@ -28,6 +28,7 @@ trait UrlShortener extends BaseNTransformer {
   }
 
   def enrichUrl(url: String): Option[String] = {
+    // validate and add protocol if missiong; default http
     val strippedUrl = url.replace(" ", "")
     val s = parse(strippedUrl)
     val enrichedUrl = if (s.protocol.isEmpty) s"http://$strippedUrl" else strippedUrl
@@ -46,7 +47,6 @@ trait UrlShortener extends BaseNTransformer {
 
     val enrichedUrl = enrichedUrlOption.get
 
-    // todo: unit test: if stop and start, should generate same
     val key = s"hash:${hashUrl(enrichedUrl)}"
 
     dbGet(key) match {
