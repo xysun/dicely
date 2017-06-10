@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.{ HttpResponse, StatusCodes }
 import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import org.jsun.dicely.UrlShortener
-import org.jsun.dicely.db.RedisStandaloneImpl
+import org.jsun.dicely.db.RedisClientImpl
 import org.jsun.dicely.model.{ JsonSupport, ShortenRequest }
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -48,4 +48,4 @@ trait DicelyRoutes extends Directives with JsonSupport {
 
 trait DicelyRoutesImpl extends DicelyRoutes
   with UrlShortener
-  with RedisStandaloneImpl
+  with RedisClientImpl
