@@ -26,3 +26,9 @@ trait DBClientMock extends DBClient {
     setMap += (key -> value)
   }
 }
+
+trait DBClientExceptionMock extends DBClientMock {
+  override def dbGet(key:String) = {
+    throw new Exception("mock exception in dbGet!")
+  }
+}

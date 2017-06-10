@@ -36,7 +36,7 @@ trait UrlShortener extends BaseNTransformer {
 
   def retrieve(shortUrl: String): Option[String] = dbGet(s"id:${decode(shortUrl)}")
 
-  def shorten(longUrl: String): ShortenResponse = { // todo: try catch
+  def shorten(longUrl: String): ShortenResponse = {
 
     val base = s"${conf.getString("domain")}:${conf.getInt("port")}"
 

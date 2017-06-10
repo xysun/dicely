@@ -13,6 +13,12 @@ object ResponseCreator {
     data = None
   )
 
+  val INTERNAL_SERVER_ERROR = ShortenResponse(
+    status_code = 500,
+    status_text = "INTERNAL_SERVER_ERROR",
+    data = None
+  )
+
   def create(domain: String, hash: String, longUrl: String, isNewHash: Boolean) =
     ShortenResponse(
       status_code = 200,

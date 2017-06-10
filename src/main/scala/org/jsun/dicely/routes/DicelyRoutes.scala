@@ -1,18 +1,19 @@
 package org.jsun.dicely.routes
 
-import akka.http.scaladsl.model.{ HttpResponse, StatusCodes }
+import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import org.jsun.dicely.UrlShortener
-import org.jsun.dicely.db.RedisClientImpl
-import org.jsun.dicely.model.{ JsonSupport, ShortenRequest }
+import org.jsun.dicely.db.{DBClient, RedisClientImpl}
+import org.jsun.dicely.model.{JsonSupport, ShortenRequest}
+import org.jsun.dicely.util.ResponseCreator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
-trait DicelyRoutes extends Directives with JsonSupport {
-  this: UrlShortener =>
+trait DicelyRoutes extends Directives with JsonSupport with UrlShortener {
+  this: DBClient =>
 
   private val version = "v1"
 
@@ -22,8 +23,9 @@ trait DicelyRoutes extends Directives with JsonSupport {
         path("shorten") {
           post {
             entity(as[ShortenRequest]) { request =>
-              complete {
-                Future { shorten(request.url) }
+              onComplete(Future(shorten(request.url))) {
+                case Success(v)  => complete(v)
+                case Failure(ex) => complete(ResponseCreator.INTERNAL_SERVER_ERROR) // todo: logging
               }
             }
           }
@@ -46,6 +48,4 @@ trait DicelyRoutes extends Directives with JsonSupport {
 
 }
 
-trait DicelyRoutesImpl extends DicelyRoutes
-  with UrlShortener
-  with RedisClientImpl
+trait DicelyRoutesImpl extends DicelyRoutes with RedisClientImpl
