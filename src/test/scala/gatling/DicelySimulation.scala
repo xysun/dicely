@@ -21,8 +21,7 @@ class DicelySimulation extends Simulation {
       .post("/api/v1/shorten")
       .header("Content-Type", "application/json")
       .body(StringBody("""{ "url": "${URLRequest}" }""")).asJSON
-      .check(status.is(200))
-    )
+      .check(status.is(200)))
 
   setUp(
     scn.inject(
