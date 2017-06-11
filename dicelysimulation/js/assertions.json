@@ -1,0 +1,10 @@
+{
+  "simulation": "gatling.DicelySimulation",
+  "simulationId": "dicelysimulation",
+  "start": 1497158624361,
+  "description": "",
+  "scenarios": ["post"],
+  "assertions": [
+
+  ]
+}

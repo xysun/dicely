@@ -8,12 +8,7 @@ import org.jsun.dicely.model.ShortenResponse
 import org.scalatest.{ BeforeAndAfterEach, Matchers, WordSpec }
 
 class DicelyAppExceptionSpec extends WordSpec with Matchers with ScalatestRouteTest
-    with DicelyRoutesExceptionMock
-    with BeforeAndAfterEach {
-
-  override def beforeEach = {
-    resetDB()
-  }
+    with DicelyRoutesExceptionMock {
 
   def routes = shortenRoute ~ geturl
 

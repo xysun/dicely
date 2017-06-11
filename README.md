@@ -47,13 +47,25 @@ Here is the algorithm design:
 - Same short url returned for multiple requests of same long url. 
 - Protection against enumeration of all database entries with random salt prefix. 
 - Not tied to redis, easy to swap to a different database. 
-- Fast. [TODO] gatling result here.
+- Fast. 
+    - Using gatling to hit local instance (local java + local redis, on a normal macbook pro) with 1000 new url POST requests/sec
+     ![gatling](images/gatling.png)
+    - You can see gatling report [here](dicelysimulation/index.html)
 
 
 ### Furthur improvements
 
 - An URL shortening service usually has high read-to-write ratio. We can separate both at application layer and database layer (redis support readonly and writeonly nodes in a cluster)
 - URL shortening service is usually the target for heavy spammers. We can implement some kind of spam filtering to protect the service. 
+
+### Loadtest
+
+Gatling is included in project. 
+
+```
+> sbt
+> gatling:TestOnly gatling.DicelySimulation
+```
 
 ### Deploy as standalone jar
 

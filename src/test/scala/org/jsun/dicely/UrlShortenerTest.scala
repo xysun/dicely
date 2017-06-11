@@ -1,14 +1,14 @@
 package org.jsun.dicely
 
-import org.jsun.dicely.mock.DBClientMock
+import org.jsun.dicely.mock.{ DBClientMock, DBMockPool }
 import org.scalatest.{ BeforeAndAfterEach, FunSuite }
 
 class UrlShortenerTest extends FunSuite with BeforeAndAfterEach
     with UrlShortener
-    with DBClientMock {
+    with DBMockPool {
 
   override def beforeEach {
-    resetDB()
+    getDBResource().resetDB()
   }
 
   test("valid url with protocol and www") {
@@ -52,6 +52,6 @@ class UrlShortenerTest extends FunSuite with BeforeAndAfterEach
   test("new hash should return new_hash = true and set") {
     val result = shorten("http://test1.com").data.get
     assert(result.new_hash)
-    assert(counter == 1L)
+    assert(getDBResource().counter == 1L)
   }
 }

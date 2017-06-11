@@ -1,11 +1,12 @@
 package org.jsun.dicely.mock
 
-import org.jsun.dicely.db.DBClient
+import org.jsun.dicely.db.{ DBClient, DBPool }
 
 /**
  * Created by jsun on 6/9/2017 AD.
  */
-trait DBClientMock extends DBClient {
+
+object DBClientMock extends DBClient {
 
   var counter = 0L
   var setMap: Map[String, String] = Map.empty
@@ -15,20 +16,42 @@ trait DBClientMock extends DBClient {
     setMap = Map.empty
   }
 
-  def dbGet(key: String) = setMap.get(key)
+  def get(key: String) = setMap.get(key)
 
-  def dbIncr(key: String) = {
+  def incr(key: String) = {
     counter += 1
     counter
   }
 
-  def dbSet(key: String, value: String) = {
+  def set(key: String, value: String) = {
     setMap += (key -> value)
   }
+
+  def close() = ()
 }
 
-trait DBClientExceptionMock extends DBClientMock {
-  override def dbGet(key: String) = {
+trait DBMockPool extends DBPool {
+  def getDBResource() = DBClientMock
+}
+
+object DBClientExceptionMock extends DBClient {
+
+  def get(key: String) = {
     throw new Exception("mock exception in dbGet!")
   }
+
+  def close() = ()
+
+  def incr(key: String) = {
+    throw new Exception("mock exception in dbIncr!")
+  }
+
+  def set(key: String, value: String) = {
+    throw new Exception("mock exception in dbSet!")
+  }
+
+}
+
+trait DBExceptionMockPool extends DBPool {
+  def getDBResource() = DBClientExceptionMock
 }

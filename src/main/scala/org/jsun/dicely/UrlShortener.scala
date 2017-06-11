@@ -8,13 +8,13 @@ import com.google.common.hash.Hashing
 import com.netaporter.uri.Uri.parse
 import com.typesafe.config.ConfigFactory
 import org.apache.commons.validator.routines.UrlValidator
-import org.jsun.dicely.db.DBClient
+import org.jsun.dicely.db.{ DBClient, DBPool }
 import org.jsun.dicely.model.ShortenResponse
 import org.jsun.dicely.util._
 
 trait UrlShortener extends BaseNTransformer {
 
-  this: DBClient =>
+  this: DBPool =>
 
   private val conf = ConfigFactory.load()
 
@@ -35,7 +35,15 @@ trait UrlShortener extends BaseNTransformer {
     if (urlValidator.isValid(enrichedUrl)) Some(enrichedUrl) else None
   }
 
-  def retrieve(shortUrl: String): Option[String] = dbGet(s"id:${decode(shortUrl)}")
+  def retrieve(shortUrl: String): Option[String] = {
+
+    val dbClient = getDBResource()
+    try {
+      dbClient.get(s"id:${decode(shortUrl)}")
+    } finally {
+      dbClient.close()
+    }
+  }
 
   def shorten(longUrl: String): ShortenResponse = {
 
@@ -52,28 +60,34 @@ trait UrlShortener extends BaseNTransformer {
 
     val key = s"hash:${hashUrl(enrichedUrl)}"
 
-    dbGet(key) match {
+    val dbClient = getDBResource()
 
-      case None => {
+    try {
 
-        val id = dbIncr("id")
+      dbClient.get(key) match {
 
-        val encoded = encode(id)
+        case None => {
 
-        // save to (hash(long_url), short_url) table
-        dbSet(key, encoded)
+          val id = dbClient.incr("id")
 
-        // save to (counter, long_url) table
-        dbSet(s"id:$id", enrichedUrl)
+          val encoded = encode(id)
 
-        ResponseCreator.create(base, encoded, enrichedUrl, true)
+          // save to (hash(long_url), short_url) table
+          dbClient.set(key, encoded)
+
+          // save to (counter, long_url) table
+          dbClient.set(s"id:$id", enrichedUrl)
+
+          ResponseCreator.create(base, encoded, enrichedUrl, true)
+
+        }
+
+        case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
 
       }
-
-      case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
-
+    } finally {
+      dbClient.close()
     }
-
   }
 
 }

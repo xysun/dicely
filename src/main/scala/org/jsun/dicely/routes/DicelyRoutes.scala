@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Directives
 import com.netaporter.uri.Uri.parse
 import com.typesafe.scalalogging.LazyLogging
 import org.jsun.dicely.UrlShortener
-import org.jsun.dicely.db.{ DBClient, RedisClientImpl }
+import org.jsun.dicely.db.{ DBClient, DBPool, RedisPool }
 import org.jsun.dicely.model.{ JsonSupport, ShortenRequest }
 import org.jsun.dicely.util.ResponseCreator
 
@@ -14,7 +14,7 @@ import scala.concurrent.Future
 import scala.util.{ Failure, Success }
 
 trait DicelyRoutes extends Directives with JsonSupport with UrlShortener with LazyLogging {
-  this: DBClient =>
+  this: DBPool =>
 
   private val version = "v1"
 
@@ -55,4 +55,4 @@ trait DicelyRoutes extends Directives with JsonSupport with UrlShortener with La
 
 }
 
-trait DicelyRoutesImpl extends DicelyRoutes with RedisClientImpl
+trait DicelyRoutesImpl extends DicelyRoutes with RedisPool

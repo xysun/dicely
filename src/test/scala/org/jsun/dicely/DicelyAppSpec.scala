@@ -12,7 +12,7 @@ class DicelyAppSpec extends WordSpec with Matchers with ScalatestRouteTest
     with BeforeAndAfterEach {
 
   override def beforeEach = {
-    resetDB()
+    getDBResource().resetDB()
   }
 
   def routes = shortenRoute ~ geturl
