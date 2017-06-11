@@ -50,7 +50,7 @@ Here is the algorithm design:
 - Fast. 
     - Using gatling to hit local instance (local java + local standalone redis, on a normal macbook pro) with 1000 new url POST requests/sec
      ![gatling](images/gatling.png)
-    - You can see gatling report [here](dicelysimulation/index.html)
+    - You can see gatling report [here](dicelysimulation/index.html) (GitHub does not render .html files, so better open locally)
     - Note: if you use redis-cluster, you'll get better tail performance. Here's gatling report for a local 6-node cluster:
 
      ![gatling2](images/gatling_cluster.png)
