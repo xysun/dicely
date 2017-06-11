@@ -8,11 +8,11 @@ import com.google.common.hash.Hashing
 import com.netaporter.uri.Uri.parse
 import com.typesafe.config.ConfigFactory
 import org.apache.commons.validator.routines.UrlValidator
-import org.jsun.dicely.db.{Closeable, DBClient, DBPool}
+import org.jsun.dicely.db.{ Closeable, DBClient, DBPool }
 import org.jsun.dicely.model.ShortenResponse
 import org.jsun.dicely.util._
 
-trait UrlShortener extends BaseNTransformer with Closeable{
+trait UrlShortener extends BaseNTransformer with Closeable {
 
   this: DBPool =>
 
@@ -37,7 +37,7 @@ trait UrlShortener extends BaseNTransformer with Closeable{
 
   def retrieve(shortUrl: String): Option[String] = {
 
-    using(getDBResource()){ r =>
+    using(getDBResource()) { r =>
       r.get(s"id:${decode(shortUrl)}")
     }
   }
@@ -58,28 +58,29 @@ trait UrlShortener extends BaseNTransformer with Closeable{
     val key = s"hash:${hashUrl(enrichedUrl)}"
 
     using(getDBResource()) {
-      r => {
-        r.get(key) match {
+      r =>
+        {
+          r.get(key) match {
 
-          case None => {
+            case None => {
 
-            val id = r.incr("id")
+              val id = r.incr("id")
 
-            val encoded = encode(id)
+              val encoded = encode(id)
 
-            // save to (hash(long_url), short_url) table
-            r.set(key, encoded)
+              // save to (hash(long_url), short_url) table
+              r.set(key, encoded)
 
-            // save to (counter, long_url) table
-            r.set(s"id:$id", enrichedUrl)
+              // save to (counter, long_url) table
+              r.set(s"id:$id", enrichedUrl)
 
-            ResponseCreator.create(base, encoded, enrichedUrl, true)
+              ResponseCreator.create(base, encoded, enrichedUrl, true)
 
+            }
+
+            case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
           }
-
-          case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
         }
-      }
     }
   }
 

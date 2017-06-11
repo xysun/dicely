@@ -1,8 +1,5 @@
 package org.jsun.dicely.db
 
-import com.typesafe.config.ConfigFactory
-import redis.clients.jedis.{ Jedis, JedisPool }
-
 /**
  * Created by jsun on 6/9/2017 AD.
  */

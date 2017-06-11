@@ -48,9 +48,13 @@ Here is the algorithm design:
 - Protection against enumeration of all database entries with random salt prefix. 
 - Not tied to redis, easy to swap to a different database. 
 - Fast. 
-    - Using gatling to hit local instance (local java + local redis, on a normal macbook pro) with 1000 new url POST requests/sec
+    - Using gatling to hit local instance (local java + local standalone redis, on a normal macbook pro) with 1000 new url POST requests/sec
      ![gatling](images/gatling.png)
     - You can see gatling report [here](dicelysimulation/index.html)
+    - Note: if you use redis-cluster, you'll get better tail performance. Here's gatling report for a local 6-node cluster:
+
+     ![gatling2](images/gatling_cluster.png)
+    - See below "Loadtest" section on how to run loadtest.  
 
 
 ### Furthur improvements
@@ -62,10 +66,16 @@ Here is the algorithm design:
 
 Gatling is included in project. 
 
+First you should have a local dicely instance running at port 8080, then:
+
 ```
 > sbt
 > gatling:TestOnly gatling.DicelySimulation
 ```
+
+It will hit local dicely instance with 1000 POST new url requests per second. 
+
+You can also change host and port in `test/scala/gatling/DicelySimulation` to hit a dicely instance of your choice.
 
 ### Deploy as standalone jar
 
