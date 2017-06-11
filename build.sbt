@@ -2,6 +2,8 @@ import sbt.Keys._
 import ReleaseTransformations._
 import ReleasePlugin.autoImport._
 
+enablePlugins(GatlingPlugin)
+
 lazy val akkaHttpVersion = "10.0.7"
 lazy val akkaVersion    = "2.5.2"
 
@@ -47,7 +49,9 @@ lazy val root = (project in file(".")).
       "commons-validator"          %  "commons-validator"           % "1.4.0",
       "com.iheart"                 %% "ficus"                       % "1.4.1",
       "com.typesafe.scala-logging" %% "scala-logging"               % "3.5.0",
-      "ch.qos.logback"             %  "logback-classic"             % "1.1.7"
+      "ch.qos.logback"             %  "logback-classic"             % "1.1.7",
+      "io.gatling.highcharts"      % "gatling-charts-highcharts"    % "2.2.5"         % Test,
+      "io.gatling"                 % "gatling-test-framework"       % "2.2.5"         % Test
     )
   )
   .settings(assemblySettings: _*)

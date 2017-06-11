@@ -2,7 +2,7 @@ package org.jsun.dicely
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.{Directives, HttpApp, Route}
+import akka.http.scaladsl.server.{ Directives, HttpApp, Route }
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 import org.jsun.dicely.routes.DicelyRoutesImpl

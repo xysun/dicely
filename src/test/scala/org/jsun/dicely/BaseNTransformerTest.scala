@@ -19,7 +19,7 @@ class BaseNTransformerTest extends FunSuite
     }
   }
 
-  test("checksum should always produce 2 character"){
+  test("checksum should always produce 2 character") {
     val ALPHABET = ConfigFactory.load().getString("alphabet")
     val BASE = ALPHABET.length
     assert(toBaseN(BASE).length == 2)
