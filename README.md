@@ -11,6 +11,8 @@ An example Dicely service is deployed on a digital ocean instance.
 > This and all future requests should be directed to <a href="https://github.com">this URI</a>
 ```
 
+Note: curl does not render redirect. If you open "http://46.101.75.1/mb3" in browser you will see the redirect.
+
 ### Run locally
 
 You will need:
