@@ -35,6 +35,16 @@ class DicelyAppSpec extends WordSpec with Matchers with ScalatestRouteTest
 
   "DicelyApp" should {
 
+    "get length < 3 url should return 404 immediately" in {
+      Get("/ab") ~> routes ~> check {
+        status shouldBe StatusCodes.NotFound
+      }
+
+      Get("/b") ~> routes ~> check {
+        status shouldBe StatusCodes.NotFound
+      }
+    }
+
     "post invalid url to hash" in {
 
       post("abc") ~> routes ~> check {

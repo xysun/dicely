@@ -37,6 +37,8 @@ trait UrlShortener extends BaseNTransformer with Closeable {
 
   def retrieve(shortUrl: String): Option[String] = {
 
+    if (shortUrl.length < 3) return None // fast fail
+
     using(getDBResource()) { r =>
       r.get(s"id:${decode(shortUrl)}")
     }
