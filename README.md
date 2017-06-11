@@ -34,6 +34,8 @@ Then:
 
 Here is the architecture of sample service deployed on that digital ocean instance: 
 
+(Send me your public key if you want to log in to server and play around)
+
 ![service architecture](images/service_architecture.png)
 
 It's easy to scale horizontally for both service layer and database layer. 
@@ -45,7 +47,7 @@ Here is the algorithm design:
 
 ### Features
 
-- Can shorten up to 4.3bn urls (roughly same as the [internet size](http://www.worldwidewebsize.com/)). It's also very easy to extend to bigger size. 
+- Can shorten up to 4.3bn urls (roughly same as the [internet size](http://www.worldwidewebsize.com/)). Each short url is <= 7 characters. It's also very easy to extend to bigger size. 
 - Same short url returned for multiple requests of same long url. 
 - Protection against enumeration of all database entries with random salt prefix. 
 - Not tied to redis, easy to swap to a different database. 
