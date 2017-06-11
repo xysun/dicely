@@ -8,13 +8,13 @@ import com.google.common.hash.Hashing
 import com.netaporter.uri.Uri.parse
 import com.typesafe.config.ConfigFactory
 import org.apache.commons.validator.routines.UrlValidator
-import org.jsun.dicely.db.DBClient
+import org.jsun.dicely.db.{ Closeable, DBClient, DBPool }
 import org.jsun.dicely.model.ShortenResponse
 import org.jsun.dicely.util._
 
-trait UrlShortener extends BaseNTransformer {
+trait UrlShortener extends BaseNTransformer with Closeable {
 
-  this: DBClient =>
+  this: DBPool =>
 
   private val conf = ConfigFactory.load()
 
@@ -35,7 +35,12 @@ trait UrlShortener extends BaseNTransformer {
     if (urlValidator.isValid(enrichedUrl)) Some(enrichedUrl) else None
   }
 
-  def retrieve(shortUrl: String): Option[String] = dbGet(s"id:${decode(shortUrl)}")
+  def retrieve(shortUrl: String): Option[String] = {
+
+    using(getDBResource()) { r =>
+      r.get(s"id:${decode(shortUrl)}")
+    }
+  }
 
   def shorten(longUrl: String): ShortenResponse = {
 
@@ -52,28 +57,31 @@ trait UrlShortener extends BaseNTransformer {
 
     val key = s"hash:${hashUrl(enrichedUrl)}"
 
-    dbGet(key) match {
+    using(getDBResource()) {
+      r =>
+        {
+          r.get(key) match {
 
-      case None => {
+            case None => {
 
-        val id = dbIncr("id")
+              val id = r.incr("id")
 
-        val encoded = encode(id)
+              val encoded = encode(id)
 
-        // save to (hash(long_url), short_url) table
-        dbSet(key, encoded)
+              // save to (hash(long_url), short_url) table
+              r.set(key, encoded)
 
-        // save to (counter, long_url) table
-        dbSet(s"id:$id", enrichedUrl)
+              // save to (counter, long_url) table
+              r.set(s"id:$id", enrichedUrl)
 
-        ResponseCreator.create(base, encoded, enrichedUrl, true)
+              ResponseCreator.create(base, encoded, enrichedUrl, true)
 
-      }
+            }
 
-      case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
-
+            case Some(s: String) => ResponseCreator.create(base, s, enrichedUrl, false)
+          }
+        }
     }
-
   }
 
 }

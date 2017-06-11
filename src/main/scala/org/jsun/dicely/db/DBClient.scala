@@ -6,11 +6,13 @@ package org.jsun.dicely.db
 trait DBClient {
 
   // for url shortener, we need: 1. atomic inr 2. get 3. set
-  def dbIncr(key: String): Long
+  def incr(key: String): Long
 
-  def dbGet(key: String): Option[String]
+  def get(key: String): Option[String]
 
-  def dbSet(key: String, value: String): Unit
+  def set(key: String, value: String): Unit
+
+  def close(): Unit
 
 }
 

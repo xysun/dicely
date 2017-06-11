@@ -3,17 +3,12 @@ package org.jsun.dicely
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
-import org.jsun.dicely.mock.{DicelyRoutesExceptionMock, DicelyRoutesMock}
+import org.jsun.dicely.mock.{ DicelyRoutesExceptionMock, DicelyRoutesMock }
 import org.jsun.dicely.model.ShortenResponse
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
+import org.scalatest.{ BeforeAndAfterEach, Matchers, WordSpec }
 
 class DicelyAppExceptionSpec extends WordSpec with Matchers with ScalatestRouteTest
-    with DicelyRoutesExceptionMock
-    with BeforeAndAfterEach {
-
-  override def beforeEach = {
-    resetDB()
-  }
+    with DicelyRoutesExceptionMock {
 
   def routes = shortenRoute ~ geturl
 
@@ -46,11 +41,10 @@ class DicelyAppExceptionSpec extends WordSpec with Matchers with ScalatestRouteT
     }
 
     "return 404 when exception in get" in {
-      Get("/abc") ~> routes ~> check{
+      Get("/abc") ~> routes ~> check {
         status shouldBe StatusCodes.NotFound
       }
     }
-
 
   }
 
