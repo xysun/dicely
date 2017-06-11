@@ -24,5 +24,5 @@ class RedisCluster(r: JedisCluster) extends DBClient {
 
   def set(key: String, value: String): Unit = r.set(key, value)
 
-  def close(): Unit = ()
+  def close(): Unit = () // jediscuster has its own thread pool so we don't need to worry about close()
 }

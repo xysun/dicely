@@ -22,10 +22,6 @@ class DicelySimulation extends Simulation {
       .header("Content-Type", "application/json")
       .body(StringBody("""{ "url": "${URLRequest}" }""")).asJSON
       .check(status.is(200))
-    //.check(jsonPath("$").saveAs("RESPONSE_DATA"))).exec(session => {
-    //println("Some Restful Service:")
-    //println(session("RESPONSE_DATA").as[String])
-    //session}
     )
 
   setUp(

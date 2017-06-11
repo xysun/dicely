@@ -28,7 +28,7 @@ trait UrlShortener extends BaseNTransformer with Closeable {
   }
 
   def enrichUrl(url: String): Option[String] = {
-    // validate and add protocol if missiong; default http
+    // validate and add protocol if missing; default http
     val strippedUrl = url.replace(" ", "")
     val s = parse(strippedUrl)
     val enrichedUrl = if (s.protocol.isEmpty) s"http://$strippedUrl" else strippedUrl
