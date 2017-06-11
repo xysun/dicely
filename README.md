@@ -16,7 +16,7 @@ An example Dicely service is deployed on a digital ocean instance.
 You will need:
 
 - java 1.8
-- a local running redis instance. You can quickly get one running following instruction [here](https://redis.io/topics/quickstart)
+- a local running redis instance (not required if running tests only). You can quickly get one running following instruction [here](https://redis.io/topics/quickstart)
 
 Then: 
 
@@ -52,7 +52,7 @@ Here is the algorithm design:
 
 ### Furthur improvements
 
-- An URL shortening service usually has high read-to-write ratio. We can separate both at application layer and database layer (redis support readonly and writeonly nodes in a cluster)
+- An URL shortening service usually has high read-to-write ratio. We can separate both at application layer and database layer (redis support readonly nodes in a cluster)
 - URL shortening service is usually the target for heavy spammers. We can implement some kind of spam filtering to protect the service. 
 
 ### Deploy as standalone jar
