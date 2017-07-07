@@ -1,18 +1,5 @@
 dicely is a URL shortening service. 
 
-### Try it out
-
-An example Dicely service is deployed on a digital ocean instance. 
-
-```
-> curl -H "Content-Type: application/json" -X POST -d '{"url":"https://github.com"}' http://46.101.75.1/api/v1/shorten
-> {"status_code":200,"status_text":"OK","data":{"short_url":"http://46.101.75.1/mb3","long_url":"https://github.com","hash":"mb3","new_hash":true}}
-> curl http://46.101.75.1/mb3
-> This and all future requests should be directed to <a href="https://github.com">this URI</a>
-```
-
-Note: curl does not render redirect. If you open "http://46.101.75.1/mb3" in browser you will see the redirect.
-
 ### Run locally
 
 You will need:
